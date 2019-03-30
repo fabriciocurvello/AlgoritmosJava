@@ -26,4 +26,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    //Material SearchView
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 }
