@@ -4,8 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +18,10 @@ import android.view.MenuItem;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.project.fabricio.algoritmosjava.R;
 import com.project.fabricio.algoritmosjava.adapter.AdapterVideo;
+import com.project.fabricio.algoritmosjava.api.YoutubeService;
+import com.project.fabricio.algoritmosjava.helper.RetrofitConfig;
+import com.project.fabricio.algoritmosjava.helper.YouTubeConfig;
+import com.project.fabricio.algoritmosjava.model.Resultado;
 import com.project.fabricio.algoritmosjava.model.Video;
 
 import java.util.ArrayList;
@@ -25,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Video> videos = new ArrayList<>();
     private AdapterVideo adapterVideo;
 
+    private Retrofit retrofit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerVideos = findViewById(R.id.reciclerVideos);
         searchView = findViewById(R.id.searchView);
+
+        retrofit = RetrofitConfig.getRetrofit();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Algoritmos em JAVA");
@@ -74,13 +87,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void recuperarVideos() {
 
-        Video video1 = new Video();
-        video1.setTitulo("Vídeo 1 de Algoritmos do Canal do Fabrício");
-        videos.add(video1);
+        YoutubeService youtubeService = retrofit.create( YoutubeService.class );
 
-        Video video2 = new Video();
-        video2.setTitulo("Vídeo 2 de Algoritmos do Canal do Fabrício");
-        videos.add(video2);
+
+        /* rascunho
+
+        https://www.googleapis.com/youtube/v3/
+        search
+        ?part=snippet
+        &order=date
+        &maxResults=20
+        &key=AIzaSyD4z9O_Ze-wdxXtYqHSwYX6zUZyZ4yj0G4
+        &channelId=UCDKQmex_QOtjlZvWlRbjMew
+    
+         */
+
+
+        youtubeService.recuperarVideos(
+                "snippet", "date", "20",
+                YouTubeConfig.CHAVE_YOUTUBE_API,
+                YouTubeConfig.CANAL_ID
+        ).enqueue(new Callback<Resultado>() {
+            @Override
+            public void onResponse(Call<Resultado> call, Response<Resultado> response) {
+                Log.i("----RESULTADO----", " ---- resultado: " + response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<Resultado> call, Throwable t) {
+
+            }
+        });
+
     }
 
     @Override
