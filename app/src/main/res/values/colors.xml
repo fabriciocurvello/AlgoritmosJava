@@ -3,5 +3,6 @@
     <color name="colorPrimary">#FF093B9B</color>
     <color name="colorPrimaryDark">#FF000957</color>
     <color name="colorAccent">#FF1921F8</color>
-    <color name="cinza_medio">#EBEBEB</color>
+    <color name="cinza">#BEBEBE</color>
+    <color name="branco">#FFFFFF</color>
 </resources>
