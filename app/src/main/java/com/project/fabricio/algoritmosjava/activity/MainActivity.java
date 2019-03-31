@@ -9,6 +9,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     private void recuperarVideos(String pesquisa) {
 
