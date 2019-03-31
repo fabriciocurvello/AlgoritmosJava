@@ -21,6 +21,7 @@ import com.project.fabricio.algoritmosjava.adapter.AdapterVideo;
 import com.project.fabricio.algoritmosjava.api.YoutubeService;
 import com.project.fabricio.algoritmosjava.helper.RetrofitConfig;
 import com.project.fabricio.algoritmosjava.helper.YouTubeConfig;
+import com.project.fabricio.algoritmosjava.model.Item;
 import com.project.fabricio.algoritmosjava.model.Resultado;
 import com.project.fabricio.algoritmosjava.model.Video;
 
@@ -31,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerVideos;
     private MaterialSearchView searchView;
-    private List<Video> videos = new ArrayList<>();
+
+    private List<Item> videos = new ArrayList<>();
+    private Resultado resultado;
     private AdapterVideo adapterVideo;
 
     private Retrofit retrofit;
@@ -52,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         recuperarVideos();
-        adapterVideo = new AdapterVideo(videos, this);
-        recyclerVideos.setHasFixedSize( true );
-        recyclerVideos.setLayoutManager( new LinearLayoutManager( this ));
-        recyclerVideos.setAdapter(adapterVideo);
+
 
         //métodos para SearchView
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -104,13 +104,20 @@ public class MainActivity extends AppCompatActivity {
 
 
         youtubeService.recuperarVideos(
-                "snippet", "date", "20",
+                "snippet", "date", "50",
                 YouTubeConfig.CHAVE_YOUTUBE_API,
                 YouTubeConfig.CANAL_ID
         ).enqueue(new Callback<Resultado>() {
             @Override
             public void onResponse(Call<Resultado> call, Response<Resultado> response) {
-                Log.i("----RESULTADO----", " ---- resultado: " + response.toString());
+                Log.i("----RESULTADO----", "resultado: " + response.toString());
+
+                if ( response.isSuccessful() ) {
+                    resultado = response.body();
+                    videos = resultado.items;
+                    configurarRecyclerView();
+                    //Log.i("----RESULTADO----", "resultado: "  );
+                }
             }
 
             @Override
@@ -120,6 +127,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public void configurarRecyclerView() {
+        adapterVideo = new AdapterVideo(videos, this);
+        recyclerVideos.setHasFixedSize( true );
+        recyclerVideos.setLayoutManager( new LinearLayoutManager( this ));
+        recyclerVideos.setAdapter(adapterVideo);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
