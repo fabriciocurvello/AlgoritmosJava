@@ -58,14 +58,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        recuperarVideos();
+        recuperarVideos("");
 
 
         //métodos para SearchView
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                recuperarVideos( query );
+                return true;
             }
 
             @Override
@@ -83,13 +84,16 @@ public class MainActivity extends AppCompatActivity {
             //Quando o usuário fechar o searchview
             @Override
             public void onSearchViewClosed() {
-
+                recuperarVideos("" );
             }
         });
 
     }
 
-    private void recuperarVideos() {
+    private void recuperarVideos(String pesquisa) {
+
+        //A pesquisa do usuário precisa não pode conter espaço. Existindo, tem que substituir por +
+        String q = pesquisa.replaceAll(" ", "+");
 
         YoutubeService youtubeService = retrofit.create( YoutubeService.class );
 
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         youtubeService.recuperarVideos(
                 "snippet", "date", "50",
                 YouTubeConfig.CHAVE_YOUTUBE_API,
-                YouTubeConfig.CANAL_ID
+                YouTubeConfig.CANAL_ID, q
         ).enqueue(new Callback<Resultado>() {
             @Override
             public void onResponse(Call<Resultado> call, Response<Resultado> response) {
