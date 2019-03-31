@@ -9,11 +9,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.project.fabricio.algoritmosjava.R;
@@ -21,6 +24,7 @@ import com.project.fabricio.algoritmosjava.adapter.AdapterVideo;
 import com.project.fabricio.algoritmosjava.api.YoutubeService;
 import com.project.fabricio.algoritmosjava.helper.RetrofitConfig;
 import com.project.fabricio.algoritmosjava.helper.YouTubeConfig;
+import com.project.fabricio.algoritmosjava.listener.RecyclerItemClickListener;
 import com.project.fabricio.algoritmosjava.model.Item;
 import com.project.fabricio.algoritmosjava.model.Resultado;
 import com.project.fabricio.algoritmosjava.model.Video;
@@ -134,6 +138,36 @@ public class MainActivity extends AppCompatActivity {
         recyclerVideos.setHasFixedSize( true );
         recyclerVideos.setLayoutManager( new LinearLayoutManager( this ));
         recyclerVideos.setAdapter(adapterVideo);
+
+        recyclerVideos.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        this,
+                        recyclerVideos,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+
+                                Item video = videos.get(position);
+                                String idVideo = video.id.videoId;
+
+                                Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+                                intent.putExtra("idVideo", idVideo);
+                                startActivity(intent);
+
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            }
+                        }
+                )
+        );
     }
 
 

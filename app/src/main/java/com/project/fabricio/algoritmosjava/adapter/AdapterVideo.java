@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.project.fabricio.algoritmosjava.R;
 import com.project.fabricio.algoritmosjava.model.Item;
 import com.project.fabricio.algoritmosjava.model.Video;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,10 @@ public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder
 
         Item video = videos.get( position );
         holder.titulo.setText( video.snippet.title );
-        //holder.titulo.setText( video.id.videoId );
+
+        String url = video.snippet.thumbnails.high.url;
+
+        Picasso.get().load(url).resize(1000,800).into(holder.capa);
 
     }
 
